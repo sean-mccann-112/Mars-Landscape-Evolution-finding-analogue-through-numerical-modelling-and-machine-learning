@@ -169,9 +169,9 @@ def main(
                         seed=seed,
                         select=select,
                         stack_size=block_stacking,
-			file_location=flumy_file_path,
-    			remap_list=remap_list,
-    			remap_value=remap_value,
+                        file_location=flumy_file_path,
+                        remap_list=remap_list,
+                        remap_value=remap_value,
                     )
                     """erosion_steps, timestep and erosion_diffusion_ratio
                     need to be tweaked to match real world datapoint"""
