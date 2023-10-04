@@ -260,12 +260,10 @@ def main(tif_file_name, save_path, stride, cross_section_size, threshold, given_
                 np.save(save_path + file_name, fixed_image)
 
 
-earth_file = 'C:/Users/User/Documents/UCC college stuff, new folder, old on harddrive/QGIS stuff/DEM of features try 1.tif'
-
 if __name__ == "__main__":
     main(
-        tif_file_name=earth_file,
-        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Mars data/mars0/",
+        tif_file_name='C:/Users/User/Documents/UCC college stuff, new folder, old on harddrive/QGIS stuff/DEM of features try 1.tif',
+        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Earth data/earth0/",
         stride=25,
         cross_section_size=50,
         threshold=0.1,

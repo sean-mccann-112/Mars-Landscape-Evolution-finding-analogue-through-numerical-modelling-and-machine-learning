@@ -75,7 +75,7 @@ def file_name_generator(
         edr: float = 1.,
 ):
     """
-    :param block_stacking: number of FLumy blocks that were stacked
+    :param block_stacking: number of Flumy blocks that were stacked
     :param erosion_steps: amount of timesteps
     :param timestep: timestep size
     :param edr: erosion/diffusion ratio
@@ -97,9 +97,9 @@ def file_name_generator(
 
 
 def main():
-    filenamelist = os.listdir("F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/test file/")
+    filenamelist = os.listdir("F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5/")
     print(filenamelist)
-    # filenamelist = file_name_generator(2, 1500, 1, 150)
+    # filenamelist = file_name_generator(2, 15000, 0.2, 100)
     # fulldata, full_labels = import_data(filenamelist, layerresolution=4)
     # full_labels.to_csv("F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/label dataframe.csv", index=False)
     # np.savez_compressed("F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/2_1500_1_150_fulldata.npz", fulldata)
