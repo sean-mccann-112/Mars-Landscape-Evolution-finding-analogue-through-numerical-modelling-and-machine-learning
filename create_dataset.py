@@ -130,6 +130,7 @@ def main(
     timestep=0.1,
     edr=20,
     timestep_skip=100,
+    flumy_file_path="F:/College_UCC/AM6021- Dissertation/FLUMY Stuff/FLUMY export blocks/",
 ):
     """
     :param file_path: str: file path to save
@@ -137,9 +138,13 @@ def main(
     :param timestep: size of a single timestep
     :param edr: erosion/diffusion ratio
     :param timestep_skip: no. of initial timesteps to skip over before saving
+    :param flumy_file_path: file path string pointing towards flumy data folder
     :return:
     """
     block_stacking = 2
+    remap_list=[[10, 11, 12, 13, 14, 15], [1, 2], [3, 9], [4, 5, 6, 7], [8]],
+    remap_value=[0, 10, 8, 3, 1],
+
 
     # Training Data ranges
     cd_range = range(3, 18, 3)
@@ -158,15 +163,15 @@ def main(
             for seed in seed_range:
                 for select in selection_range:
 
-                    if cd != 15 or ntg <=10:
-                        continue
-
                     durability_block = load_block(
                         channel_depth=cd,
                         net_gross=ntg,
                         seed=seed,
                         select=select,
                         stack_size=block_stacking,
+			file_location=flumy_file_path,
+    			remap_list=remap_list,
+    			remap_value=remap_value,
                     )
                     """erosion_steps, timestep and erosion_diffusion_ratio
                     need to be tweaked to match real world datapoint"""
