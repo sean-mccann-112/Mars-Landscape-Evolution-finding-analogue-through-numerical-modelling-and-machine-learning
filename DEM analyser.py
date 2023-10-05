@@ -92,6 +92,6 @@ def main(path, name, threshold, cross_section_length):
 
 
 if __name__ == "__main__":
-    path = "F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5/temp/"
-    name = "9_10_1_0_2_15000_0.2_100_100.npy"
-    main(path=path, name=name, threshold=0.01, cross_section_length=50)
+    path = "F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Mars Data/mars0/"
+    name = "1_1_20_0.npy"
+    main(path=path, name=name, threshold=0.005, cross_section_length=50)

@@ -6,6 +6,8 @@ from skimage.feature import hessian_matrix, hessian_matrix_eigvals
 from cv2 import ximgproc
 from scipy import signal
 
+from PIL import Image
+
 
 def fast_line_detection(img):
     image = img.astype('uint8') * 255
@@ -94,8 +96,13 @@ def detect_ridge(gray_img, sigma=3.0, threshold=0.4):
 
 
 def load_tif(tiffilename):
-    img = GeoTiff(tiffilename)
-    array = np.array(img.read())[9:-9, 3:-4]
+    img = Image.open(tiffilename)
+    array = np.array(img)[400:10400:10, 2000:5000:10]
+    array = np.array(img)[8000:18000:10, 3500:5500:10]
+    plt.imshow(array, cmap="Greys_r")
+    plt.colorbar()
+    plt.show()
+    # array = np.array(img.read())[9:-9, 3:-4]
     return array
 
 
@@ -262,13 +269,13 @@ def main(tif_file_name, save_path, stride, cross_section_size, threshold, given_
 
 if __name__ == "__main__":
     main(
-        tif_file_name='C:/Users/User/Documents/UCC college stuff, new folder, old on harddrive/QGIS stuff/DEM of features try 1.tif',
-        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Earth data/earth0/",
+        tif_file_name='F:/College_UCC/AM6021- Dissertation/Tif Files/Mars DEM Geotiff.tif',
+        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Mars data/mars1/",
         stride=25,
         cross_section_size=50,
         threshold=0.1,
-        given_cd=3,
-        given_ntg=20,
+        given_cd=1,
+        given_ntg=1,
         image_size=200,
-        plot_all_image=True,
+        plot_all_image=False,
     )
