@@ -142,62 +142,72 @@ def main(
     :return:
     """
     block_stacking = 2
-    remap_list=[[10, 11, 12, 13, 14, 15], [1, 2], [3, 9], [4, 5, 6, 7], [8]],
-    remap_value=[0, 10, 8, 3, 1],
-
 
     # Training Data ranges
     cd_range = range(3, 18, 3)
     ntg_range = range(10, 60, 10)
     seed_range = range(1, 2, 1)
     selection_range = range(0, 6 - block_stacking, 1)
-
-    # Model tuning ranges (to match earth data)
-    # cd_range = range(3, 4, 1)
-    # ntg_range = range(20, 21, 1)
-    # seed_range = range(1, 2, 1)
-    # selection_range = range(0, 6 - block_stacking, 1)
-
+    block_list = []
     for cd in cd_range:
         for ntg in ntg_range:
             for seed in seed_range:
                 for select in selection_range:
+                    # if cd !=3 or ntg !=20 or select !=1:
+                    #     continue
+                    block_list.append([cd, ntg, seed, select])
 
-                    durability_block = load_block(
-                        channel_depth=cd,
-                        net_gross=ntg,
-                        seed=seed,
-                        select=select,
-                        stack_size=block_stacking,
-                        file_location=flumy_file_path,
-                        remap_list=remap_list,
-                        remap_value=remap_value,
-                    )
-                    """erosion_steps, timestep and erosion_diffusion_ratio
-                    need to be tweaked to match real world datapoint"""
+    # testing set
+    # block_list = [
+    #     [9, 30, 5, 0],
+    #     [8, 45, 5, 0],
+    #     [15, 35, 5, 0],
+    #     [10, 25, 5, 0],
+    #     [5, 15, 5, 0]
+    # ]
 
-                    depth_map_timeline = erosion_model(
-                        durability_block=durability_block,
-                        erosion_steps=erosion_steps,
-                        timestep=timestep,
-                        erosion_diffusion_ratio=edr,
-                        printout=True,
-                    )
-                    file_name = f"{cd}_{ntg}_{seed}_{select}_{block_stacking}_{erosion_steps}_{timestep}_{edr}"
-                    save_depth_map_timeline(
-                        depth_map_timeline=depth_map_timeline[:, :, ::timestep_skip],
-                        file_path=file_path + file_name,
-                        array_name=file_name,
-                    )
-                    print("saved file ", file_name)
+    remap_list = [[10, 11, 12, 13, 14, 15], [1, 2], [3, 9], [4, 5, 6, 7], [8]]
+    remap_value = [0, 10, 8, 3, 1]
+
+    for listed in block_list:
+        [cd, ntg, seed, select] = listed
+
+        durability_block = load_block(
+            channel_depth=cd,
+            net_gross=ntg,
+            seed=seed,
+            select=select,
+            stack_size=block_stacking,
+            file_location=flumy_file_path,
+            remap_list=remap_list,
+            remap_value=remap_value,
+        )
+        """erosion_steps, timestep and erosion_diffusion_ratio
+        need to be tweaked to match real world datapoint"""
+
+        depth_map_timeline = erosion_model(
+            durability_block=durability_block,
+            erosion_steps=erosion_steps,
+            timestep=timestep,
+            erosion_diffusion_ratio=edr,
+            printout=False,
+        )
+        file_name = f"{cd}_{ntg}_{seed}_{select}_{block_stacking}_{erosion_steps}_{timestep}_{edr}"
+        save_depth_map_timeline(
+            depth_map_timeline=depth_map_timeline[:, :, ::timestep_skip],
+            file_path=file_path + file_name,
+            array_name=file_name,
+        )
+        print("saved file ", file_name)
 
 
 if __name__ == "__main__":
-    edr = 100
-    main(
-        file_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5/",
-        erosion_steps=15000,
-        timestep=0.2,
-        edr=edr,
-        timestep_skip=1,
-    )
+    edr_list = [100]
+    for edr in edr_list:
+        main(
+            file_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5 testing/",
+            erosion_steps=15000,
+            timestep=0.2,
+            edr=edr,
+            timestep_skip=10,
+        )

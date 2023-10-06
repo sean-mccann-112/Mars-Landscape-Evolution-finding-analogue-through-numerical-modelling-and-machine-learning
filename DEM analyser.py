@@ -46,7 +46,7 @@ def ridge_plotting(ar, cs_lines, t, cs_size):
 
 def main(path, name, threshold, cross_section_length):
     arr = load_data(filepath=path, filename=name)
-    potential_ridge_mask = detect_ridge(arr, sigma=2.0, threshold=threshold)
+    potential_ridge_mask = detect_ridge(arr, sigma=2.0, threshold=0.005)
 
     """show DEM"""
     plt.imshow(-100*arr, cmap="Greys_r", vmin=-100, vmax=0)
@@ -72,7 +72,7 @@ def main(path, name, threshold, cross_section_length):
     plt.show()
 
     """plot ridges with ridge line and cross section"""
-    plot_ridges(arr, possible_ridge_lines[:, 4], cross_section_length, mask=False)
+    plot_ridges(arr, possible_ridge_lines, cross_section_length, mask=False)
     plot_ridges(arr, possible_ridge_lines, cross_section_length, mask=True)
 
     lines = np.clip(find_perpendicular_endpoints(*possible_ridge_lines, cross_section_length), 0, arr.shape[0] - 1)
@@ -92,6 +92,6 @@ def main(path, name, threshold, cross_section_length):
 
 
 if __name__ == "__main__":
-    path = "F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Mars Data/mars0/"
-    name = "1_1_20_0.npy"
-    main(path=path, name=name, threshold=0.005, cross_section_length=50)
+    path = "F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/test file/temp/"
+    name = "3_20_1_1_2_15000_0.4_10_48.npy"
+    main(path=path, name=name, threshold=0.015, cross_section_length=50)

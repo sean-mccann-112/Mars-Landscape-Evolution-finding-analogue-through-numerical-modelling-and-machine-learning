@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import tensorflow as tf
+import pandas as pd
 
 from MachineLearningTraining import load_data, create_model
 
@@ -118,12 +119,9 @@ def plot_prediction_true_correlation(root, path, file_name_list, model, scale_la
     image_labels = np.empty((len(file_name_list), 2))
 
     for i in range(len(file_name_list)):
-        print(i, len(file_name_list))
+        # print(i, len(file_name_list))
         file_name = file_name_list[i]  # file name (also contains labels data for image)
-        # load the selected numpy array
-        imagePath = root + path + file_name
-
-        validation_image = np.load(file=imagePath)
+        validation_image = np.load(file=root + path + file_name)
 
         # extract the labels, ie first two values in the file name
         label_str = file_name.split(sep="_")
@@ -133,17 +131,34 @@ def plot_prediction_true_correlation(root, path, file_name_list, model, scale_la
         image_labels[i] = validation_label
 
     predictions = np.array(model.predict(image_set))
-    plt.title("Channel Depth Prediction")
-    print(image_labels[1].shape, (predictions[:, 0]*scale_labels[0]).shape)
-    plt.scatter(x=image_labels[:, 0], y=predictions[0]*scale_labels[0], alpha=0.02)
-    plt.xlabel("True Label")
-    plt.ylabel("Predicted Label")
-    plt.show()
 
-    plt.title("Net to Gross % Prediction")
-    plt.scatter(x=image_labels[:, 1], y=predictions[1] * scale_labels[1], alpha=0.02)
+    column_names = ["True cd", "True ntg", "Predicted cd", "Predicted ntg"]
+    df = pd.DataFrame(np.transpose(np.array([image_labels[:, 0], image_labels[:, 1], predictions[0, :, 0]*scale_labels[0], predictions[1, :, 0]*scale_labels[1]])), columns=column_names)
+    sorted_df = df.sort_values(by=['True cd', 'True ntg'])
+
+    cd_key = sorted(list(set(image_labels[:, 0])))
+    ntg_key = sorted(list(set(image_labels[:, 1])))
+
+    colour_list = ["blue", "green", "yellow", "orange", "red"]
+    for k in range(len(ntg_key)):
+        ntg = ntg_key[k]
+        average_array = []
+        standard_array = []
+        for j in range(len(cd_key)):
+            cd = cd_key[j]
+            filtered_df = sorted_df[(sorted_df['True cd'] == cd) & (sorted_df['True ntg'] == ntg)]
+            average_array.append(filtered_df["Predicted cd"].mean())
+            standard_array.append(filtered_df["Predicted cd"].std())
+            plt.scatter(x=filtered_df['True cd']+(ntg/1000), y=filtered_df["Predicted cd"], alpha=2/(len(filtered_df)+2), c=colour_list[k])
+
+        plt.errorbar(x=cd_key, y=average_array, yerr=standard_array, capsize=2, c=colour_list[k], alpha=0.5)
+        plt.plot(cd_key, average_array, c=colour_list[k], label=f"ntg={ntg}%")
+
+    plt.plot([2, 15], [2, 15], c="black", linestyle="--", label="accurate")
+    plt.title("Channel Depth Training Data Accuracy")
     plt.xlabel("True Label")
     plt.ylabel("Predicted Label")
+    plt.legend()
     plt.show()
 
 
@@ -166,7 +181,7 @@ def plot_precision(root, path, file_name_list, model, scale_labels=(30, 100)):
     y = predictions[1] * scale_labels[1]
     plt.scatter(x, y, color="r", marker="o", alpha=0.2, label="Predicted Results")
     # plt.scatter(3, 20, s=100, color="b", marker="x", label="True Result")
-    plt.errorbar(3, 16, xerr=1, yerr=6, fmt='x', ecolor='b', color='b', label="True Result")
+    # plt.errorbar(3, 16, xerr=1, yerr=6, fmt='x', ecolor='b', color='b', label="True Result")
     plt.scatter(average[0], average[1], s=100, color="g", marker="x", label="Average Result")
     plt.xlim(0, 15)
     plt.ylim(0, 50)
@@ -209,20 +224,20 @@ def main(root, model_path, valid_path):
     model.summary()
 
     # load saved weights, if they exist, so to continue training
-    model.load_weights("C:/Users/User/Downloads/unique model.weights.hdf5")
+    model.load_weights("C:/Users/User/Downloads/Dissertation Model Weights/unique model.weights.hdf5")
     # if os.path.isfile(root + model_path + f'/{model.name}.weights.hdf5'):
     #     model.load_weights(root + model_path + f'/{model.name}.weights.hdf5')
-
+    # file_name_list = [f for f in os.listdir(root+valid_path) if f.endswith('.npy')]
     file_name_list = load_data(root=root, path=valid_path, filename="name_list.txt", samplereduction=sample_reduction)
-    # plot_prediction_true_correlation(root=root, path=valid_path, file_name_list=file_name_list, model=model, scale_labels=max_labels)
+    plot_prediction_true_correlation(root=root, path=valid_path, file_name_list=file_name_list, model=model, scale_labels=max_labels)
     # plot_prediction(root=root, path=valid_path, file_name_list=file_name_list, model=model, offset=20, num_rows=5, num_cols=5, scale_labels=max_labels)
-    plot_precision(root=root, path=valid_path, file_name_list=file_name_list, model=model, scale_labels=max_labels)
+    # plot_precision(root=root, path=valid_path, file_name_list=file_name_list, model=model, scale_labels=max_labels)
 
 
 if __name__ == "__main__":
     # define the path the data is travelling: root will not change, the individual folder will depend on dataset accessed
     root = "F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/"
     weight_path = "Simulated data/2_15000_0.2_100_2.5/temp/1_1_.128._3_2_.256_16._sigmoid_scaled.weights.hdf5"
-    valid_path = "Earth data/earth0/"
-    # valid_path = "Simulated data/2_15000_0.2_100_2.5/temp/"
+    # valid_path = "Mars data/mars1/"
+    valid_path = "Simulated data/2_15000_0.2_100_2.5 testing/temp/"
     main(root=root, model_path=weight_path, valid_path=valid_path)

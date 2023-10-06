@@ -116,9 +116,9 @@ def main(
 
 if __name__ == "__main__":
     main(
-        root="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5/",
-        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5/temp/",
-        layerresolution=100,
+        root="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5 testing/",
+        save_path="F:/College_UCC/AM6021- Dissertation/Depth Map Numpy Files/Simulated data/2_15000_0.2_100_2.5 testing/temp/",
+        layerresolution=10,
         cross_section_size=50,
         threshold=0.1,
         image_size=200,

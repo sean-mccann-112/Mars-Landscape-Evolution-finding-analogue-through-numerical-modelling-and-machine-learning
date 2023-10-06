@@ -97,8 +97,8 @@ def detect_ridge(gray_img, sigma=3.0, threshold=0.4):
 
 def load_tif(tiffilename):
     img = Image.open(tiffilename)
-    array = np.array(img)[400:10400:10, 2000:5000:10]
-    array = np.array(img)[8000:18000:10, 3500:5500:10]
+    # array = np.array(img)[400:10400:10, 2000:5000:10]
+    # array = np.array(img)[8000:18000:10, 3000:5500:10]
     plt.imshow(array, cmap="Greys_r")
     plt.colorbar()
     plt.show()
@@ -181,9 +181,13 @@ def ridge_decider(ar, cs_lines, t, cs_size, plot_decision=False):
             """min point is at mid point"""
             new_line_values = np.copy(line_values)
 
+        peak_width_data = signal.peak_widths(x=-new_line_values, peaks=[min_index], rel_height=0.9)
+        peak_height = peak_width_data[1][0]
+        print(peak_height, new_line_values.max())
         if line_values[np.clip(min_index - 10, 0, len(line_values) - 1)] > t and line_values[np.clip(min_index + 10, 0, len(line_values) - 1)] > t:
             ridge_bool = True
             """if ridge is true, set initial condtion to new ridge values"""
+
             if ridge_h < new_line_values.max():
                 ridge_h = new_line_values.max()
                 highest_ridge = np.copy(line_values)
